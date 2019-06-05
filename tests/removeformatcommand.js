@@ -45,6 +45,12 @@ describe( 'RemoveFormatCommand', () => {
 				model.schema.setAttributeProperties( 'bold', {
 					isFormatting: true
 				} );
+
+				model.schema.extend( 'p', { allowAttributes: [ 'foo' ] } );
+
+				model.schema.setAttributeProperties( 'foo', {
+					isFormatting: true
+				} );
 			} );
 	} );
 
@@ -140,6 +146,11 @@ describe( 'RemoveFormatCommand', () => {
 					expect( model.document.selection.hasAttribute( 'bold' ) ).to.equal( false );
 					expect( model.document.selection.hasAttribute( 'irrelevant' ) ).to.equal( true );
 				}
+			},
+
+			'state with multiple block elements': {
+				input: '<p foo="bar">[foo baz</p><p foo="bar">foo baz]</p>',
+				assert: () => expectModelToBeEqual( '<p>[foo baz</p><p>foo baz]</p>' )
 			}
 		};
 
